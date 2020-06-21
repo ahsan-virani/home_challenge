@@ -10,7 +10,7 @@ module.exports = {
         db: "home_challenge",
         authenticate: false,
         models: [
-          { name: "Payments", collection: "payments", hints: "repository/paymentsRepository/hints" }
+          { name: "PaymentHistory", collection: "paymentHistory", hints: "repository/paymentHistoryRepository/hints" }
         ]
       }
     }

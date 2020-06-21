@@ -30,7 +30,7 @@ describe("The health check endpoint", () => {
     sandbox.stub(mongo, "isConnected")
       .returns(false);
 
-    return appTest.request.get("/api/internal/promotedPost").expect(503);
+    return appTest.request.get("/api/v1/test").expect(503);
   });
 
   afterEach(() => sandbox.restore());

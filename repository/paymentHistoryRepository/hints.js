@@ -4,5 +4,6 @@
 
 module.exports = {
   NONE: null,
-  ID: { _id: 1 }
+  ID: { _id: 1 },
+  CONTRACT_ID: { contract_id: 1 }
 };

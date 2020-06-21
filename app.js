@@ -11,7 +11,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(health.healthCheckMiddleware);
 
-app.use("/api", routes);
+app.use("/api/v1", routes);
 app.use("/api/health", health.healthCheckHandler);
 
 module.exports = { app };
