@@ -1,5 +1,20 @@
 "use strict";
 
-const mongo  = require("../../lib/mongo");
+const _       = require("lodash"),
+      mongodb = require("mongodb"),
+      mongo   = require("../../lib/mongo");
 
-module.exports.cleanDatabaseAndCache = () => mongo.PaymentHistory.deleteMany({});
+module.exports.cleanDatabase = () => mongo.PaymentHistory.deleteMany({});
+
+module.exports.generatePaymentObject = fields => _.merge({
+  _id: new mongodb.ObjectID(),
+  id: 1365,
+  contract_id: 17689,
+  description: "Rent to be paid",
+  value: 100,
+  time: "2016-12-09T00:00:00.00Z",
+  isImported: false,
+  created_at: "2016-12-09T12:57:09.708Z",
+  updated_at: "2016-12-09T12:57:09.709Z",
+  is_deleted: false
+}, fields);
