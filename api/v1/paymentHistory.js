@@ -26,9 +26,29 @@ const getPaymentHistory = async (req, res, next) => {
     paymentHistory = await paymentHistoryController.getPaymentHistory(parseInt(contractId), startDate, endDate);
   } catch (err) {
     next(err);
+    return;
   }
 
   res.json(paymentHistory);
+};
+
+const addToPaymentHistory = async (req, res, next) => {
+  const { payment } = req.body;
+
+  if (!payment) {
+    sendBadRequest(req, res, "addToPaymentHistory", "missing payment data");
+    return;
+  }
+
+  let createdPayment;
+  try {
+    createdPayment = await paymentHistoryController.addToPaymentHistory(payment);
+  } catch (err) {
+    next(err);
+    return;
+  }
+
+  res.json(createdPayment);
 };
 
 function sendBadRequest(req, res, methodName, message) {
@@ -37,5 +57,6 @@ function sendBadRequest(req, res, methodName, message) {
 }
 
 module.exports = {
-  getPaymentHistory
+  getPaymentHistory,
+  addToPaymentHistory
 };

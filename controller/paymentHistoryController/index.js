@@ -10,3 +10,11 @@ module.exports.getPaymentHistory = async (contractId, startDate, endDate) => {
 
   return { sum, payments };
 };
+
+module.exports.addToPaymentHistory = paymentData => {
+  // todo validate paymentData with schema
+
+  paymentData.created_at = new Date();
+
+  return paymentHistoryRepository.create(paymentData);
+};

@@ -11,6 +11,7 @@ router.get("/test", (req, res, next) => {
 });
 
 router.get("/paymentHistory", paymentHistory.getPaymentHistory);
+router.post("/paymentHistory", paymentHistory.addToPaymentHistory);
 
 router.use(errorHandler);
 

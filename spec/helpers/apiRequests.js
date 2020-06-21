@@ -3,6 +3,11 @@
 const appTest = require("./appTest");
 
 module.exports.getPaymentHistory = (options = {}) =>
-  appTest.request.get("/api/v1/paymentHistory")
+  appTest.request.get("/api/v1/paymentHistory/")
     .set("Accept", "application/json")
     .query(options.query);
+
+module.exports.addToPaymentHistory = (options = {}) =>
+  appTest.request.post("/api/v1/paymentHistory/")
+    .set("Accept", "application/json")
+    .send(options.body);

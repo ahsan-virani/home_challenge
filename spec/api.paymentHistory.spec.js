@@ -77,6 +77,27 @@ describe("Payment History", () => {
     });
   });
 
+  describe("POST v1/paymentHistory", () => {
+    it("should fail if bad request", async () => {
+      const result = await apiRequests.addToPaymentHistory().expect(400);
+      expect(result.error.text).eql("missing payment data");
+
+      // todo add failed validation cases
+    });
+
+    it("should add payment history item", async () => {
+      const payment = helpers.generatePaymentObject(),
+            result  = await apiRequests.addToPaymentHistory({
+              body: {
+                payment
+              }
+            }).expect(200);
+
+      expect(result.body.id).eql(payment.id);
+      expect(result.body.contract_id).eql(payment.contract_id);
+    });
+  });
+
   afterEach(helpers.cleanDatabase);
 })
 ;
