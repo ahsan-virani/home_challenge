@@ -34,11 +34,22 @@ describe("PaymentHistory Repository", () => {
         description: "Rent to be paid",
         value: -100,
         time: "2016-12-09T00:00:00.00Z",
+        is_imported: false,
+        createdAt: "2016-12-09T12:57:09.708Z",
+        updatedAt: "2016-12-09T12:57:09.709Z",
+        is_deleted: false
+      }),
+      helpers.generatePaymentObject({
+        id: 13213,
+        contract_id: 17689,
+        description: "Rent to be paid",
+        value: -100,
+        time: "2016-12-09T00:00:00.00Z",
         isImported: false,
         createdAt: "2016-12-09T12:57:09.708Z",
         updatedAt: "2016-12-09T12:57:09.709Z",
-        isDeleted: false
-      }),
+        is_deleted: true
+      })
     ];
 
     return Promise.all(_.map(payments, payment => paymentsRepo.create(payment)));
@@ -59,7 +70,7 @@ describe("PaymentHistory Repository", () => {
 
   it("should find payments", async () => {
     const result = await paymentsRepo.findMany({}, { _id: 1, contract_id: 1, id: 1 });
-    expect(result.length).to.eql(2);
+    expect(result.length).to.eql(3);
   });
 
   it("should find payments by contract id and date correctly", async () => {

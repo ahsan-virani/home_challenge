@@ -21,7 +21,7 @@ module.exports.findById = id =>
 
 module.exports.findByDatesAndContractId = (contractId, startDate, endDate, fields) => {
 
-  const query = { contract_id: contractId, time: { $gte: startDate, $lte: endDate } };
+  const query = { is_deleted: { $ne: true }, contract_id: contractId, time: { $gte: startDate, $lte: endDate } };
 
   return module.exports.findMany(query, fields, hints.CONTRACT_ID_CREATED_AT);
 };
