@@ -84,6 +84,30 @@ const updatePaymentHistory = async (req, res, next) => {
   res.json(_.merge(updatedPayment, update));
 };
 
+const deletePaymentHistory = async (req, res, next) => {
+  const { id } = req.params;
+
+  if (!id || id === "undefined") {
+    sendBadRequest(req, res, "deletePaymentHistory", "missing id");
+    return;
+  }
+
+  let updatedPayment;
+  try {
+    updatedPayment = await paymentHistoryController.updatePaymentHistory(parseInt(id), { is_deleted: true });
+  } catch (err) {
+    next(err);
+    return;
+  }
+
+  if (!updatedPayment) {
+    res.status(404).send("payment not found");
+    return;
+  }
+
+  res.json(updatedPayment);
+};
+
 function sendBadRequest(req, res, methodName, message) {
   logger.info("[api/v1][%s] Bad request, message: %s, request body: %j", methodName, message, req.body);
   res.status(400).send(message);
@@ -92,5 +116,6 @@ function sendBadRequest(req, res, methodName, message) {
 module.exports = {
   getPaymentHistory,
   addToPaymentHistory,
-  updatePaymentHistory
+  updatePaymentHistory,
+  deletePaymentHistory
 };
