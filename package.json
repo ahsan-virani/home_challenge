@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "npm install && node ./app.js",
+    "test": "npm install && node_modules/.bin/mocha --exit spec/"
   },
   "author": "",
   "license": "ISC",
