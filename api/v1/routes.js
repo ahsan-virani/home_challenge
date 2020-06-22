@@ -12,6 +12,7 @@ router.get("/test", (req, res, next) => {
 
 router.get("/paymentHistory", paymentHistory.getPaymentHistory);
 router.post("/paymentHistory", paymentHistory.addToPaymentHistory);
+router.put("/paymentHistory/:id", paymentHistory.updatePaymentHistory);
 
 router.use(errorHandler);
 

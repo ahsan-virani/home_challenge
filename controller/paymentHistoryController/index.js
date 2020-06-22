@@ -18,3 +18,11 @@ module.exports.addToPaymentHistory = paymentData => {
 
   return paymentHistoryRepository.create(paymentData);
 };
+
+module.exports.updatePaymentHistory = (id, update) => {
+  // todo validate paymentData with schema
+
+  update.updated_at = new Date();
+
+  return paymentHistoryRepository.updatePaymentById(id, update);
+};

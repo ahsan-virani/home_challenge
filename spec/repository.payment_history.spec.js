@@ -3,6 +3,7 @@
 const _       = require("lodash"),
       mongodb = require("mongodb"),
       expect  = require("chai").expect,
+      moment  = require("moment"),
       hints   = require("../repository/paymentHistoryRepository/hints"),
       helpers = require("./helpers"),
       appTest = require("./helpers/appTest");
@@ -82,6 +83,17 @@ describe("PaymentHistory Repository", () => {
 
     result = await paymentsRepo.findByDatesAndContractId(17689, "2016-12-07T00:00:00.00Z", "2016-12-08T00:00:00.00Z");
     expect(result.length).eql(0);
+  });
+
+  it("should update payment by id correctly", async () => {
+    let result = await paymentsRepo.updatePaymentById(1365, { is_deleted: true, value: 250 });
+    expect(result.id).eql(1365);
+    expect(result.updated_at).eql(undefined);
+
+    const updatedValue = await paymentsRepo.findById(result._id.toString());
+    expect(updatedValue.value).eql(250);
+    expect(updatedValue.is_deleted).eql(true);
+    expect(moment(updatedValue.updated_at).isAfter(moment().subtract(1, "hour"))).eql(true);
   });
 
   afterEach(helpers.cleanDatabase);

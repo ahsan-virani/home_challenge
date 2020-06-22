@@ -1,6 +1,7 @@
 "use strict";
 
 const _           = require("lodash"),
+      moment      = require("moment"),
       mongodb     = require("mongodb"),
       expect      = require("chai").expect,
       apiRequests = require("./helpers/apiRequests"),
@@ -95,6 +96,55 @@ describe("Payment History", () => {
 
       expect(result.body.id).eql(payment.id);
       expect(result.body.contract_id).eql(payment.contract_id);
+    });
+  });
+
+  describe("PUT v1/paymentHistory", () => {
+    it("should fail if bad request", async () => {
+      let result = await apiRequests.updatePaymentHistory().expect(400);
+      expect(result.error.text).eql("missing update id");
+
+      result = await apiRequests.updatePaymentHistory(123, { body: {} }).expect(400);
+      expect(result.error.text).eql("missing payment update data");
+
+      result = await apiRequests.updatePaymentHistory(123, { body: { not_allowed: "abc" } }).expect(400);
+      expect(result.error.text).eql("missing payment update data");
+
+      result = await apiRequests.updatePaymentHistory(123, { body: { is_deleted: "abc" } }).expect(404);
+      expect(result.error.text).eql("payment not found");
+
+      // todo add failed validation cases
+    });
+
+    it("should update payment history item", async () => {
+      const payment   = helpers.generatePaymentObject({
+              _id: new mongodb.ObjectID(),
+              contract_id: 17690,
+              value: -100,
+              time: new Date("2016-12-10T00:00:00.00Z"),
+            }),
+            momentNow = moment().subtract(5, "minutes");
+
+      await paymentsRepo.create(payment);
+
+      let result = await apiRequests.updatePaymentHistory(payment.id, {
+        body: { is_deleted: true, value: 55 }
+      }).expect(200);
+
+      expect(result.body.id).eql(payment.id);
+      expect(result.body._id).eql(payment._id.toString());
+      expect(result.body.is_deleted).eql(true);
+      expect(result.body.value).eql(55);
+
+      let updatedPayment = await paymentsRepo.findById(result.body._id);
+      expect(updatedPayment.value).eql(55);
+      expect(updatedPayment.is_deleted).eql(true);
+      expect(moment(updatedPayment.updated_at).isAfter(momentNow));
+
+      result = await apiRequests.updatePaymentHistory(payment.id, {
+        body: { value: 155 }
+      }).expect(404);
+      expect(result.error.text).eql("payment not found");
     });
   });
 

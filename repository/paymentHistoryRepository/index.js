@@ -34,6 +34,13 @@ module.exports.create = async payment => {
     .catch(logDBError);
 };
 
+module.exports.updatePaymentById = async (id, update) =>
+  module.exports.findOneAndUpdate(
+    { id, is_deleted: { $ne: true } },
+    { $set: update }
+  ).then(r => r.value)
+    .catch(logDBError);
+
 module.exports.findMany = (query, projection, hint, { sort, limit } = {}) => {
   const options = {
     hint,
@@ -48,3 +55,7 @@ module.exports.findMany = (query, projection, hint, { sort, limit } = {}) => {
     .toArray()
     .catch(logDBError);
 };
+
+module.exports.findOneAndUpdate = (query, update, options) =>
+  mongo.PaymentHistory.findOneAndUpdate(query, update, { maxTimeMS: config.mongodb.maxTimeMS, ...options })
+    .catch(logDBError);
